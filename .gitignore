@@ -1,0 +1,28 @@
+# 客戶資料：絕對不 commit（即使 private repo 也保護隱私）
+拍賣蝦皮拍賣商品_*.xlsx
+yahoo_ready.xlsx
+output_*.xlsx
+test_v*.xlsx
+
+# 第三方下載的 Yahoo 範本（不重新發布）
+official_template.xlsx
+
+# 解壓縮的暫存資料夾
+_extract/
+photos/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+*.egg-info/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
