@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>服務方案報價</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "微軟正黑體", "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+    font-size: 18px;
+    background: #f0f4f8;
+    color: #222;
+    padding: 30px 20px;
+  }
+  .page { max-width: 900px; margin: 0 auto; }
+
+  /* Header */
+  .header {
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    color: white;
+    border-radius: 16px;
+    padding: 40px;
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  .header h1 { font-size: 2.2rem; letter-spacing: 4px; margin-bottom: 10px; }
+  .header p { font-size: 1.1rem; color: #aac4e0; margin-top: 8px; }
+
+  .section-title {
+    font-size: 1.3rem;
+    color: #555;
+    text-align: center;
+    margin-bottom: 24px;
+    letter-spacing: 2px;
+  }
+
+  .cards { display: flex; flex-direction: column; gap: 24px; }
+
+  .card {
+    background: white;
+    border-radius: 16px;
+    padding: 36px 40px;
+    border: 3px solid #e0e0e0;
+    position: relative;
+    transition: box-shadow 0.2s;
+    opacity: 0.88;
+  }
+  .card:hover { box-shadow: 0 8px 30px rgba(0,0,0,0.1); }
+
+  /* Recommended */
+  .card.recommended {
+    border-color: #e63946;
+    background: linear-gradient(160deg, #fff9f9, #ffffff);
+    opacity: 1;
+  }
+  .badge {
+    position: absolute;
+    top: -16px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #e63946;
+    color: white;
+    font-size: 1.1rem;
+    font-weight: bold;
+    padding: 6px 28px;
+    border-radius: 30px;
+    letter-spacing: 2px;
+    white-space: nowrap;
+  }
+
+  .plan-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  .plan-num {
+    width: 52px; height: 52px;
+    border-radius: 50%;
+    background: #9e9e9e;
+    color: white;
+    font-size: 1.4rem;
+    font-weight: bold;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .card.recommended .plan-num { background: #e63946; }
+  .plan-name { font-size: 1.6rem; font-weight: bold; color: #555; }
+  .card.recommended .plan-name { color: #c1121f; }
+
+  .tag {
+    display: inline-block;
+    font-size: 0.95rem;
+    background: #f0f0f0;
+    color: #777;
+    border-radius: 20px;
+    padding: 3px 14px;
+    margin-bottom: 18px;
+  }
+  .card.recommended .tag { background: #fde8e8; color: #c1121f; }
+
+  .features { list-style: none; margin-bottom: 24px; }
+  .features li {
+    font-size: 1.15rem;
+    padding: 8px 0;
+    border-bottom: 1px dashed #eee;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .features li:last-child { border-bottom: none; }
+  .check { color: #2e7d32; font-size: 1.3rem; flex-shrink: 0; }
+  .cross { color: #b71c1c; font-size: 1.3rem; flex-shrink: 0; }
+  .star  { color: #f57c00; font-size: 1.3rem; flex-shrink: 0; }
+
+  .note {
+    background: #fff8e1;
+    border-left: 5px solid #ffc107;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 1.05rem;
+    color: #5d4037;
+    margin-bottom: 20px;
+  }
+  .note-warn {
+    background: #fce4ec;
+    border-left: 5px solid #e53935;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 1.05rem;
+    color: #7f0000;
+    margin-bottom: 20px;
+  }
+  .note-good {
+    background: #e8f5e9;
+    border-left: 5px solid #43a047;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 1.05rem;
+    color: #1b5e20;
+    margin-bottom: 20px;
+  }
+  .note-urgent {
+    background: #fff3e0;
+    border-left: 5px solid #ef6c00;
+    border-radius: 8px;
+    padding: 14px 18px;
+    font-size: 1.1rem;
+    color: #bf360c;
+    margin-bottom: 20px;
+    font-weight: bold;
+  }
+
+  .price-area { display: flex; align-items: flex-end; gap: 16px; flex-wrap: wrap; }
+  .price-main {
+    font-size: 2.4rem;
+    font-weight: bold;
+    color: #888;
+  }
+  .card.recommended .price-main { color: #c1121f; }
+  .price-note { font-size: 1rem; color: #999; margin-bottom: 6px; }
+  .price-sub {
+    font-size: 1.1rem;
+    color: #555;
+    margin-bottom: 6px;
+  }
+  .strikethrough {
+    text-decoration: line-through;
+    color: #aaa;
+    font-size: 1.4rem;
+    margin-right: 6px;
+  }
+  .savings {
+    display: inline-block;
+    background: #e63946;
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    padding: 4px 14px;
+    border-radius: 20px;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+  .earlybird {
+    display: inline-block;
+    background: #ef6c00;
+    color: white;
+    font-size: 0.95rem;
+    font-weight: bold;
+    padding: 4px 14px;
+    border-radius: 20px;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+
+  .footer {
+    margin-top: 36px;
+    background: #1a1a2e;
+    color: #ccc;
+    border-radius: 16px;
+    padding: 28px 36px;
+    font-size: 1.05rem;
+    line-height: 2;
+  }
+  .footer strong { color: white; }
+
+  @media print {
+    body { background: white; padding: 10px; }
+    .card:hover { box-shadow: none; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <div class="header">
+    <h1>服 務 方 案 報 價</h1>
+    <p>蝦皮商品轉檔 ＋ 購物網站建置 ＋ 上架維護服務</p>
+    <p style="margin-top:14px; color:#7fc8f0; font-size:1rem;">以下共三個方案，價格由低至高，請依需求選擇</p>
+  </div>
+
+  <p class="section-title">▼ 請選擇適合您的方案 ▼</p>
+
+  <div class="cards">
+
+    <!-- Plan 1 -->
+    <div class="card">
+      <div class="plan-header">
+        <div class="plan-num">1</div>
+        <div class="plan-name">單買轉檔軟體</div>
+      </div>
+      <span class="tag">最基本方案・僅適合熟悉電腦操作的用戶</span>
+      <ul class="features">
+        <li><span class="check">✔</span> 蝦皮 → Yahoo 拍賣轉檔軟體（永久授權）</li>
+        <li><span class="check">✔</span> 操作教學 1 次（遠端）</li>
+        <li><span class="check">✔</span> 3 個月軟體功能保固</li>
+        <li><span class="cross">✘</span> 不含購物網站</li>
+        <li><span class="cross">✘</span> 不含上架協助，所有商品需自行手動操作</li>
+        <li><span class="cross">✘</span> 保固期後遇問題需另外付費處理</li>
+        <li><span class="cross">✘</span> 欄位眾多、格式複雜，學習曲線較高</li>
+      </ul>
+      <div class="note-warn">
+        ⚠️ <strong>請注意：</strong>本軟體已開發超過四小時，欄位多、邏輯複雜，目前完成度約 90%，尚需實際測試與細部調整。購買後所有後續上架作業需由您自行負責，錯誤或異常情形無法即時支援。<br><br>
+        若您對電腦操作不夠熟悉，或沒有充足時間自行摸索，<strong>強烈建議直接評估方案三</strong>，避免日後產生更多時間與金錢成本。
+      </div>
+      <div class="price-area">
+        <div>
+          <div class="price-main">NT$ 8,400</div>
+          <div class="price-note">含 5% 營業稅（未稅 NT$8,000）・一次性費用，無月費</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Plan 2 -->
+    <div class="card">
+      <div class="plan-header">
+        <div class="plan-num">2</div>
+        <div class="plan-name">轉檔軟體 ＋ 購物網站</div>
+      </div>
+      <span class="tag">中間方案・有網站但仍需大量自行操作</span>
+      <ul class="features">
+        <li><span class="check">✔</span> 蝦皮 → Yahoo 拍賣轉檔軟體（永久授權）<span style="color:#888; font-size:0.95rem;">・價值 NT$8,400</span></li>
+        <li><span class="check">✔</span> 專屬購物網站建置（僅中文版）<span style="color:#888; font-size:0.95rem;">・價值 NT$33,600</span></li>
+        <li><span class="check">✔</span> 我們會盡量將格式調整至需手動 Key-in 的欄位降至最低</li>
+        <li><span class="check">✔</span> 擁有自己網站，較不受蝦皮、Yahoo 檢驗字號等限制困擾</li>
+        <li><span class="check">✔</span> 操作教學 2 次（遠端）</li>
+        <li><span class="check">✔</span> 3 個月網站功能保固</li>
+        <li><span class="cross">✘</span> 轉檔後的檔案<strong>無法直接一鍵匯入自架購物網站</strong>，部分欄位仍需手動補齊</li>
+        <li><span class="cross">✘</span> 不含日常維護及上架協助</li>
+        <li><span class="cross">✘</span> 保固期後修改每次 NT$1,500 起另計</li>
+      </ul>
+      <div class="note-warn">
+        ⚠️ <strong>重要提醒：</strong>轉檔後的檔案可直接上架 Yahoo 拍賣，但若要匯入自架購物網站，仍有部分欄位（如：規格、商品分類、運費設定等）<strong>需手動補齊，無法一鍵完成</strong>。若您的商品數量多，累積的手動作業時間相當可觀。<br><br>
+        此方案適合願意投入時間自行管理的用戶。若想真正省心省力，<strong>建議直接選擇方案三</strong>，有專人協助、溝通成本最低。
+      </div>
+      <div class="price-area">
+        <div>
+          <div class="price-main">NT$ 42,000</div>
+          <div class="price-note">一次性費用，無月費・不含後續維護</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Plan 3 - Recommended -->
+    <div class="card recommended">
+      <div class="badge">🏆 最划算 · 強力推薦 · 省心首選</div>
+      <div class="plan-header" style="margin-top:10px;">
+        <div class="plan-num">3</div>
+        <div class="plan-name">三年全包無憂方案</div>
+      </div>
+      <span class="tag">適合：想省心、長期穩定經營網路事業的用戶</span>
+      <ul class="features">
+        <li><span class="star">★</span> <strong>轉檔軟體永久授權 — 費用已包含，不另收費</strong></li>
+        <li><span class="check">✔</span> 專屬購物網站建置（中文 ＋ 英文版）</li>
+        <li><span class="check">✔</span> 網域名稱 ＋ 部署 ＋ 三年維護全包（費用已含於本方案，不另計）</li>
+        <li><span class="star">★</span> 本案指定網域：<strong>Battery-119.com</strong>（網域申請費用及部署費用均已包含）</li>
+      </ul>
+      <div style="background:#f3f8ff; border-left:4px solid #1565c0; border-radius:8px; padding:13px 18px; font-size:1.05rem; color:#1a237e; margin-bottom:18px;">
+        ★ <strong>專業建議（為您著想）：</strong>若未來有拓展海外客群的規劃，建議可考慮同步申請 <strong>battery-sos.com</strong>——在國際上緊急求救號碼是「911」而非「119」，對外國買家更直覺易記，有助於提升跨國品牌辨識度。
+      </div>
+      <ul class="features">
+        <li><span class="check">✔</span> 由熟悉蝦皮與 Yahoo 拍賣細節的台灣工程師全程負責，溝通零障礙</li>
+        <li><span class="check">✔</span> 每月協助上架 <strong>2 次，每次最多 30 件（共 60 件／月）</strong>，定期新增商品完全不用煩惱</li>
+        <li><span class="check">✔</span> 初始建檔：協助一次性批次匯入既有商品</li>
+        <li><span class="check">✔</span> 三年系統更新、問題排除，優先處理不另計費</li>
+        <li><span class="check">✔</span> 操作教學不限次數</li>
+        <li><span class="check">✔</span> 合約到期前三個月提供續約優惠報價</li>
+      </ul>
+      <div style="background:#e3f2fd; border-left:5px solid #1565c0; border-radius:8px; padding:14px 18px; font-size:1.05rem; color:#0d47a1; margin-bottom:20px;">
+        📋 <strong>開始前準備事項：</strong><br>
+        請於簽約前準備一個 <strong>全新空白的 Gmail 信箱</strong>（專為本網站使用）。<br>
+        網站所有服務（網域、主機、後台）將完全綁定在您的信箱下，確保所有資產 <strong>100% 歸屬於您</strong>，日後無論合作是否繼續，帳號與資料都由您完全掌控。
+      </div>
+      <div class="note-good">
+        💡 <strong>真正划算在哪裡？</strong><br>
+        看似總價高，但平均每月只要 <strong>NT$4,000</strong>，就涵蓋：網站 ＋ 維護 ＋ 每月兩次上架協助 ＋ 轉檔軟體，<strong>什麼都包了</strong>。<br>
+        比請外國工程師溝通成本低得多——他們未必了解蝦皮、Yahoo 拍賣這些平台細節，一來一回就是時間與金錢。
+      </div>
+      <div class="note-urgent">
+        ⏰ 限時優惠：三日內完成簽約並付清全款，售價直接降為 <strong>NT$136,800</strong>（省下 NT$7,200），每月僅 <strong>NT$3,800</strong>！<br>
+        此優惠以合約簽署日期為準，逾期恕不適用。
+      </div>
+      <div class="price-area">
+        <div>
+          <div style="margin-bottom:8px;">
+            <span class="strikethrough">NT$ 151,200</span>
+            <span class="savings">含稅特惠</span>
+          </div>
+          <div class="price-main">NT$ 144,000 <span style="font-size:1.2rem; color:#c1121f;">/ 3年（含稅）</span></div>
+          <div class="price-sub" style="margin-top:8px;">
+            平均每月 <strong style="color:#c1121f;">NT$4,000</strong>，含所有服務
+          </div>
+          <div style="margin-top:16px; padding:24px 22px; background:linear-gradient(135deg,#b71c1c,#e53935); border-radius:14px; box-shadow:0 6px 24px rgba(183,28,28,0.35); text-align:center;">
+            <div style="font-size:1rem; color:#ffcdd2; letter-spacing:2px; margin-bottom:6px;">⏰ 限時三日優惠・全款付清</div>
+            <div style="font-size:1rem; color:#ffcdd2; text-decoration:line-through; margin-bottom:2px;">原價 NT$144,000</div>
+            <div style="font-size:3rem; font-weight:900; color:#ffffff; letter-spacing:2px; line-height:1.1;">NT$136,800</div>
+            <div style="font-size:1.05rem; color:#ffe0e0; margin-top:6px;">含稅・省下 NT$7,200</div>
+            <div style="margin-top:14px; background:rgba(255,255,255,0.15); border-radius:10px; padding:12px 16px;">
+              <div style="font-size:2rem; font-weight:900; color:#fff700; letter-spacing:1px;">每月平均僅 NT$3,800</div>
+              <div style="font-size:1.05rem; color:#fff; margin-top:4px; font-weight:bold;">此優惠適用期限：2026 年 5 月 1 日 23:59 前</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <strong style="font-size:1.2rem;">📋 補充說明</strong><br>
+    ・以上報價均含 5% 營業稅。<br>
+    ・方案三合約簽訂後 14 個工作天內完成網站雛形。<br>
+    ・每月協助上架 2 次，當月未使用不累積至下月。<br>
+    ・超出上架件數：NT$300 / 10 件（加購）。<br>
+    ・英文版文案翻譯由客戶提供，或可加購翻譯服務另議。<br>
+    ・合約第一年（NT$48,000）為不可退款期間，一年內不得申請解約。<br>
+    ・滿一年後如需提前終止：退款 ＝ 已付總金額 － 實際使用月數 × NT$4,000。<br>
+    ・三日全款優惠以完整履行三年為前提，提前終止仍依上述公式計算退款。<br><br>
+    <strong>如有任何問題，歡迎隨時聯繫討論。</strong>
+  </div>
+
+  <!-- Company Footer -->
+  <div style="margin-top:20px; text-align:center; font-size:0.95rem; color:#888; line-height:2;">
+    <strong style="color:#555;">仁格數位科技工坊</strong>　｜　統一編號：61138241<br>
+    <a href="https://renstudio.tw" style="color:#1565c0; text-decoration:none;">renstudio.tw</a>
+  </div>
+
+</div>
+</body>
+</html>
